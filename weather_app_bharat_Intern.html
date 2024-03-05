@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .weather-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .weather-data {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .weather-icon {
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="weather-container">
+        <h1>Weather App</h1>
+        <div class="weather-data"></div>
+        <div class="weather-icon"></div>
+        <div class="error-message"></div>
+    </div>
+
+    <script>
+        // Replace 'YOUR_API_KEY' with your actual API key
+        const apiKey = 'YOUR_API_KEY';
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}`;
+        const weatherDataContainer = document.querySelector('.weather-data');
+        const weatherIconContainer = document.querySelector('.weather-icon');
+        const errorMessageContainer = document.querySelector('.error-message');
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    errorMessageContainer.textContent = 'Failed to fetch weather data.';
+                } else {
+                    const { location, current } = data;
+                    const { name } = location;
+                    const { temp_c, condition, icon } = current;
+
+                    weatherDataContainer.textContent = `Current weather in ${name}: ${temp_c}°C, ${condition.text}`;
+                    weatherIconContainer.innerHTML = `<img src="${icon}" alt="Weather Icon">`;
+                }
+            })
+            .catch(error => {
+                errorMessageContainer.textContent = 'An error occurred while fetching weather data.';
+                console.error(error);
+            });
+    </script>
+</body>
+</html>
